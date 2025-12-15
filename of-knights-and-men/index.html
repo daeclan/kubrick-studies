@@ -1,775 +1,437 @@
 <!doctype html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="dark" data-font="ebg">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Of Knights and Men — DAECLAN.COM</title>
   <meta name="description" content="Of Knights and Men: Chess and Myth in Kubrick’s Body — A longform analysis of Eyes Wide Shut." />
+
+  <!-- Font loads (swap/remove if you self-host) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:opsz,wght@8..40,400;8..40,500;8..40,600;8..40,700&family=IBM+Plex+Serif:wght@400;500;600;700&family=Lora:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&display=swap" rel="stylesheet">
+
   <style>
-    /* =========================================================
-       Design Tokens (Themes)
-       ========================================================= */
     :root{
-      --bg: #0c0d10;
-      --bg-elev: #11131a;
-      --text: #e9ecf3;
-      --muted: rgba(233,236,243,.68);
-      --faint: rgba(233,236,243,.12);
-      --rule: rgba(233,236,243,.14);
-      --link: #b7c7ff;
-      --link-hover: #d7e1ff;
-      --accent: #b7c7ff;
-      --danger: #ff5b6e;
-      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --bg:#0c0d10; --bg-elev:#11131a; --text:#e9ecf3;
+      --muted:rgba(233,236,243,.68); --faint:rgba(233,236,243,.12);
+      --rule:rgba(233,236,243,.14); --link:#b7c7ff; --link-hover:#d7e1ff;
+      --accent:#b7c7ff; --danger:#ff5b6e; --shadow:0 10px 30px rgba(0,0,0,.35);
 
-      --radius: 18px;
-      --radius-sm: 12px;
+      --radius:18px; --radius-sm:12px;
+      --max:780px; --wide:1160px; --gutter:clamp(16px,4vw,34px);
 
-      --max: 780px;         /* body column */
-      --wide: 1160px;       /* breakout media */
-      --gutter: clamp(16px, 4vw, 34px);
+      /* Default font: EB Garamond */
+      --font-body:"EB Garamond", ui-serif, Georgia, serif;
+      --font-head:ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      --font-mono:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
 
-      --font-body: ui-serif, "Iowan Old Style", "Palatino Linotype", Palatino, Garamond, Georgia, serif;
-      --font-head: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
-      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --lh:1.7; --lh-tight:1.15;
+      --h1:clamp(2.1rem,3.7vw,3.05rem);
+      --h2:clamp(1.4rem,2.4vw,1.9rem);
+      --h3:clamp(1.15rem,1.9vw,1.35rem);
+      --p:1.06rem;
 
-      --lh: 1.7;
-      --lh-tight: 1.15;
+      --focus:0 0 0 3px rgba(183,199,255,.35);
 
-      --h1: clamp(2.1rem, 3.7vw, 3.05rem);
-      --h2: clamp(1.4rem, 2.4vw, 1.9rem);
-      --h3: clamp(1.15rem, 1.9vw, 1.35rem);
-      --p: 1.06rem;
-
-      --focus: 0 0 0 3px rgba(183,199,255,.35);
+      /* Dynamic sticky offsets (JS updates these) */
+      --header-h:56px;
+      --mobile-toc-h:0px;
+      --sticky-stack:calc(var(--header-h) + var(--mobile-toc-h));
     }
 
+    /* Font choices (clickable) */
+    html[data-font="ebg"]{ --font-body:"EB Garamond", ui-serif, Georgia, serif; }
+    html[data-font="source"]{ --font-body:"Source Serif 4", ui-serif, Georgia, serif; }
+    html[data-font="lora"]{ --font-body:"Lora", ui-serif, Georgia, serif; }
+    html[data-font="plex"]{ --font-body:"IBM Plex Serif", ui-serif, Georgia, serif; }
+
+    /* Themes */
     html[data-theme="light"]{
-      --bg: #fbfbfd;
-      --bg-elev: #ffffff;
-      --text: #0f1320;
-      --muted: rgba(15,19,32,.68);
-      --faint: rgba(15,19,32,.08);
-      --rule: rgba(15,19,32,.12);
-      --link: #1b4cff;
-      --link-hover: #0b33c7;
-      --accent: #1b4cff;
-      --danger: #b30b2c;
-      --shadow: 0 10px 30px rgba(10,12,18,.10);
-      --focus: 0 0 0 3px rgba(27,76,255,.22);
+      --bg:#fbfbfd; --bg-elev:#ffffff; --text:#0f1320;
+      --muted:rgba(15,19,32,.68); --faint:rgba(15,19,32,.08);
+      --rule:rgba(15,19,32,.12); --link:#1b4cff; --link-hover:#0b33c7;
+      --accent:#1b4cff; --danger:#b30b2c; --shadow:0 10px 30px rgba(10,12,18,.10);
+      --focus:0 0 0 3px rgba(27,76,255,.22);
     }
-
     html[data-theme="blue"]{
-      --bg: #061121;
-      --bg-elev: #0a1830;
-      --text: #e9f1ff;
-      --muted: rgba(233,241,255,.70);
-      --faint: rgba(233,241,255,.11);
-      --rule: rgba(233,241,255,.16);
-      --link: #7db6ff;
-      --link-hover: #a7cdff;
-      --accent: #7db6ff;
-      --danger: #ff5b6e;
-      --shadow: 0 10px 30px rgba(0,0,0,.40);
-      --focus: 0 0 0 3px rgba(125,182,255,.30);
+      --bg:#061121; --bg-elev:#0a1830; --text:#e9f1ff;
+      --muted:rgba(233,241,255,.70); --faint:rgba(233,241,255,.11);
+      --rule:rgba(233,241,255,.16); --link:#7db6ff; --link-hover:#a7cdff;
+      --accent:#7db6ff; --danger:#ff5b6e; --shadow:0 10px 30px rgba(0,0,0,.40);
+      --focus:0 0 0 3px rgba(125,182,255,.30);
     }
-
     html[data-theme="red"]{
-      --bg: #12070a;
-      --bg-elev: #1a0b0f;
-      --text: #fff1f3;
-      --muted: rgba(255,241,243,.70);
-      --faint: rgba(255,241,243,.10);
-      --rule: rgba(255,241,243,.15);
-      --link: #ff9fb0;
-      --link-hover: #ffd1d8;
-      --accent: #ff9fb0;
-      --danger: #ff304f;
-      --shadow: 0 10px 30px rgba(0,0,0,.45);
-      --focus: 0 0 0 3px rgba(255,159,176,.28);
+      --bg:#12070a; --bg-elev:#1a0b0f; --text:#fff1f3;
+      --muted:rgba(255,241,243,.70); --faint:rgba(255,241,243,.10);
+      --rule:rgba(255,241,243,.15); --link:#ff9fb0; --link-hover:#ffd1d8;
+      --accent:#ff9fb0; --danger:#ff304f; --shadow:0 10px 30px rgba(0,0,0,.45);
+      --focus:0 0 0 3px rgba(255,159,176,.28);
     }
 
-    /* =========================================================
-       Base
-       ========================================================= */
-    *{ box-sizing: border-box; }
-    html, body { height: 100%; }
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
     body{
-      margin: 0;
+      margin:0;
       background: radial-gradient(1200px 900px at 15% -10%, rgba(255,255,255,.06), transparent 55%),
                   radial-gradient(900px 700px at 90% 10%, rgba(255,255,255,.05), transparent 60%),
                   var(--bg);
-      color: var(--text);
-      font-family: var(--font-body);
-      line-height: var(--lh);
-      font-size: var(--p);
-      letter-spacing: .01em;
+      color:var(--text);
+      font-family:var(--font-body);
+      line-height:var(--lh);
+      font-size:var(--p);
+      letter-spacing:.01em;
     }
 
-    a{ color: var(--link); text-decoration: none; }
-    a:hover{ color: var(--link-hover); }
-    a:focus-visible, button:focus-visible, summary:focus-visible { outline: none; box-shadow: var(--focus); border-radius: 10px; }
+    a{ color:var(--link); text-decoration:none; }
+    a:hover{ color:var(--link-hover); }
+    a:focus-visible, button:focus-visible{ outline:none; box-shadow:var(--focus); border-radius:10px; }
 
-    ::selection{
-      background: rgba(183,199,255,.25);
-    }
-    html[data-theme="red"] ::selection{
-      background: rgba(255,159,176,.22);
-    }
-
-    .sr-only{
-      position:absolute!important; width:1px; height:1px; padding:0; margin:-1px;
-      overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;
-    }
-
-    /* =========================================================
-       Progress Bar
-       ========================================================= */
-    .progress{
-      position: fixed;
-      inset: 0 0 auto 0;
-      height: 3px;
-      background: transparent;
-      z-index: 9999;
-    }
+    .progress{ position:fixed; inset:0 0 auto 0; height:3px; z-index:9999; }
     .progress__bar{
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, var(--accent), rgba(255,255,255,.0));
-      opacity: .95;
-      transform-origin: left center;
+      height:100%; width:0%;
+      background:linear-gradient(90deg, var(--accent), rgba(255,255,255,0));
+      opacity:.95; transform-origin:left center;
     }
 
-    /* =========================================================
-       Shell Layout
-       ========================================================= */
-    .shell{
-      display: grid;
-      grid-template-columns: 290px minmax(0, 1fr);
-      gap: 0;
-      min-height: 100vh;
-    }
+    .shell{ display:grid; grid-template-columns:290px minmax(0,1fr); min-height:100vh; }
+    @media (max-width:980px){ .shell{ grid-template-columns:1fr; } }
 
-    @media (max-width: 980px){
-      .shell{ grid-template-columns: 1fr; }
-    }
-
-    /* =========================================================
-       Header
-       ========================================================= */
     header.site{
-      position: sticky;
-      top: 0;
-      z-index: 50;
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
+      position:sticky; top:0; z-index:50;
+      backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
       background: color-mix(in oklab, var(--bg) 78%, transparent);
-      border-bottom: 1px solid var(--rule);
+      border-bottom:1px solid var(--rule);
     }
-
     .site__inner{
       max-width: calc(var(--max) + (var(--gutter) * 2) + 290px);
-      margin: 0 auto;
-      padding: 14px var(--gutter);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 14px;
+      margin:0 auto; padding:14px var(--gutter);
+      display:flex; align-items:center; justify-content:space-between; gap:14px;
     }
-
-    .brand{
-      display: flex;
-      align-items: baseline;
-      gap: 10px;
-      min-width: 0;
-    }
-
+    .brand{ display:flex; align-items:baseline; gap:10px; min-width:0; }
     .brand__name{
-      font-family: var(--font-head);
-      font-weight: 700;
-      letter-spacing: .06em;
-      text-transform: uppercase;
-      font-size: .88rem;
-      color: var(--text);
-      opacity: .95;
-      white-space: nowrap;
+      font-family:var(--font-head); font-weight:700; letter-spacing:.06em;
+      text-transform:uppercase; font-size:.88rem; color:var(--text); opacity:.95;
+      white-space:nowrap;
     }
-
-    .brand__pipe{
-      height: 12px; width: 1px; background: var(--rule);
-    }
-
+    .brand__pipe{ height:12px; width:1px; background:var(--rule); }
     .brand__tag{
-      font-family: var(--font-head);
-      font-size: .88rem;
-      color: var(--muted);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      font-family:var(--font-head); font-size:.88rem; color:var(--muted);
+      white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
     }
 
-    .controls{
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-    }
+    .controls{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; justify-content:flex-end; }
 
-    .theme{
-      display: inline-flex;
-      border: 1px solid var(--rule);
+    .theme,.font{
+      display:inline-flex; border:1px solid var(--rule);
       background: color-mix(in oklab, var(--bg-elev) 86%, transparent);
-      border-radius: 999px;
-      overflow: hidden;
-      box-shadow: var(--shadow);
+      border-radius:999px; overflow:hidden; box-shadow:var(--shadow);
     }
-
-    .theme button{
-      appearance: none;
-      border: 0;
-      background: transparent;
-      color: var(--muted);
-      font-family: var(--font-head);
-      font-size: .82rem;
-      padding: 9px 12px;
-      cursor: pointer;
-      transition: background .18s ease, color .18s ease;
-      letter-spacing: .02em;
+    .theme button,.font button{
+      appearance:none; border:0; background:transparent;
+      color:var(--muted);
+      font-family:var(--font-head); font-size:.82rem;
+      padding:9px 12px; cursor:pointer;
+      transition:background .18s ease, color .18s ease;
+      letter-spacing:.02em; white-space:nowrap;
     }
-
-    .theme button[aria-pressed="true"]{
+    .theme button[aria-pressed="true"], .font button[aria-pressed="true"]{
       background: color-mix(in oklab, var(--accent) 18%, transparent);
-      color: var(--text);
+      color:var(--text);
     }
-
-    .theme button:hover{
+    .theme button:hover, .font button:hover{
       background: color-mix(in oklab, var(--accent) 12%, transparent);
-      color: var(--text);
+      color:var(--text);
     }
 
-    .mini{
-      font-family: var(--font-head);
-      font-size: .82rem;
-      color: var(--muted);
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      border: 1px solid var(--rule);
-      background: color-mix(in oklab, var(--bg-elev) 86%, transparent);
-      border-radius: 999px;
-      padding: 9px 12px;
-      box-shadow: var(--shadow);
-    }
-
-    .mini a{
-      color: var(--text);
-      opacity: .9;
-    }
-    .mini a:hover{ opacity: 1; }
-
-    /* =========================================================
-       TOC (Desktop)
-       ========================================================= */
     aside.toc{
-      position: sticky;
-      top: 56px;
-      height: calc(100vh - 56px);
-      border-right: 1px solid var(--rule);
+      position:sticky;
+      top:var(--header-h);
+      height:calc(100vh - var(--header-h));
+      border-right:1px solid var(--rule);
       background: color-mix(in oklab, var(--bg) 85%, transparent);
-      padding: 18px 14px;
-      overflow: auto;
+      padding:18px 14px;
+      overflow:auto;
     }
-
-    @media (max-width: 980px){
-      aside.toc{ display: none; }
-    }
-
+    @media (max-width:980px){ aside.toc{ display:none; } }
     .toc__title{
-      font-family: var(--font-head);
-      font-size: .84rem;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin: 8px 10px 12px;
+      font-family:var(--font-head);
+      font-size:.84rem; letter-spacing:.08em; text-transform:uppercase;
+      color:var(--muted); margin:8px 10px 12px;
     }
-
-    .toc__list{
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-
+    .toc__list{ list-style:none; padding:0; margin:0; }
     .toc__list a{
-      display: block;
-      padding: 9px 10px;
-      border-radius: 12px;
-      color: var(--muted);
-      font-family: var(--font-head);
-      font-size: .92rem;
-      line-height: 1.25;
-      transition: background .18s ease, color .18s ease;
+      display:block; padding:9px 10px; border-radius:12px;
+      color:var(--muted); font-family:var(--font-head);
+      font-size:.92rem; line-height:1.25;
+      transition:background .18s ease, color .18s ease;
     }
-
-    .toc__list a:hover{
-      background: color-mix(in oklab, var(--faint) 100%, transparent);
-      color: var(--text);
-    }
-
+    .toc__list a:hover{ background:color-mix(in oklab, var(--faint) 100%, transparent); color:var(--text); }
     .toc__list a.is-active{
       background: color-mix(in oklab, var(--accent) 16%, transparent);
-      color: var(--text);
+      color:var(--text);
       box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--accent) 25%, transparent);
     }
 
     .toc__meta{
-      margin: 14px 10px 0;
-      padding-top: 14px;
-      border-top: 1px dashed var(--rule);
-      color: var(--muted);
-      font-family: var(--font-head);
-      font-size: .85rem;
-      display: grid;
-      gap: 6px;
+      margin:14px 10px 0; padding-top:14px; border-top:1px dashed var(--rule);
+      color:var(--muted); font-family:var(--font-head); font-size:.85rem;
+      display:grid; gap:6px;
     }
+    .toc__meta span b{ color:var(--text); font-weight:600; }
 
-    .toc__meta span b{ color: var(--text); font-weight: 600; }
-
-    /* =========================================================
-       Mobile TOC
-       ========================================================= */
     .mobile-toc{
-      display: none;
-      position: sticky;
-      top: 56px;
-      z-index: 30;
-      border-bottom: 1px solid var(--rule);
+      display:none;
+      position:sticky;
+      top:var(--header-h);
+      z-index:30;
+      border-bottom:1px solid var(--rule);
       background: color-mix(in oklab, var(--bg) 86%, transparent);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
     }
-    @media (max-width: 980px){
-      .mobile-toc{ display: block; }
-    }
+    @media (max-width:980px){ .mobile-toc{ display:block; } }
     .mobile-toc__inner{
       max-width: calc(var(--max) + (var(--gutter) * 2));
-      margin: 0 auto;
-      padding: 10px var(--gutter);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
+      margin:0 auto; padding:10px var(--gutter);
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
     }
     .mobile-toc__btn{
-      appearance: none;
-      border: 1px solid var(--rule);
+      appearance:none; border:1px solid var(--rule);
       background: color-mix(in oklab, var(--bg-elev) 86%, transparent);
-      color: var(--text);
-      border-radius: 999px;
-      padding: 10px 12px;
-      font-family: var(--font-head);
-      font-size: .9rem;
-      cursor: pointer;
-      box-shadow: var(--shadow);
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
+      color:var(--text); border-radius:999px;
+      padding:10px 12px;
+      font-family:var(--font-head); font-size:.9rem;
+      cursor:pointer; box-shadow:var(--shadow);
+      display:inline-flex; align-items:center; gap:10px;
     }
-    .mobile-toc__btn .dot{
-      width: 8px; height: 8px; border-radius: 999px;
-      background: var(--accent);
-      opacity: .9;
-    }
+    .mobile-toc__btn .dot{ width:8px; height:8px; border-radius:999px; background:var(--accent); opacity:.9; }
     .mobile-toc__current{
-      font-family: var(--font-head);
-      font-size: .9rem;
-      color: var(--muted);
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      max-width: 55vw;
+      font-family:var(--font-head); font-size:.9rem; color:var(--muted);
+      overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+      max-width:55vw;
     }
 
-    .drawer{
-      position: fixed;
-      inset: 0;
-      display: none;
-      z-index: 60;
-    }
-    .drawer.is-open{ display: block; }
-    .drawer__backdrop{
-      position: absolute;
-      inset: 0;
-      background: rgba(0,0,0,.45);
-    }
-    html[data-theme="light"] .drawer__backdrop{
-      background: rgba(15,19,32,.25);
-    }
+    .drawer{ position:fixed; inset:0; display:none; z-index:60; }
+    .drawer.is-open{ display:block; }
+    .drawer__backdrop{ position:absolute; inset:0; background:rgba(0,0,0,.45); }
+    html[data-theme="light"] .drawer__backdrop{ background:rgba(15,19,32,.25); }
     .drawer__panel{
-      position: absolute;
-      top: 0; right: 0;
-      width: min(420px, 92vw);
-      height: 100%;
-      background: var(--bg);
-      border-left: 1px solid var(--rule);
-      box-shadow: var(--shadow);
-      padding: 18px;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
+      position:absolute; top:0; right:0;
+      width:min(420px,92vw); height:100%;
+      background:var(--bg); border-left:1px solid var(--rule);
+      box-shadow:var(--shadow);
+      padding:18px;
+      display:flex; flex-direction:column; gap:14px;
     }
-    .drawer__head{
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-    }
+    .drawer__head{ display:flex; align-items:center; justify-content:space-between; gap:10px; }
     .drawer__head h2{
-      margin: 0;
-      font-family: var(--font-head);
-      font-size: 1.02rem;
-      letter-spacing: .05em;
-      text-transform: uppercase;
-      color: var(--muted);
+      margin:0; font-family:var(--font-head);
+      font-size:1.02rem; letter-spacing:.05em; text-transform:uppercase;
+      color:var(--muted);
     }
     .drawer__close{
-      appearance: none;
-      border: 1px solid var(--rule);
+      appearance:none; border:1px solid var(--rule);
       background: color-mix(in oklab, var(--bg-elev) 86%, transparent);
-      color: var(--text);
-      border-radius: 999px;
-      padding: 10px 12px;
-      font-family: var(--font-head);
-      cursor: pointer;
+      color:var(--text); border-radius:999px;
+      padding:10px 12px; font-family:var(--font-head); cursor:pointer;
     }
-    .drawer nav{
-      overflow: auto;
-      padding-right: 4px;
-    }
-    .drawer .toc__list a{
-      font-size: 1rem;
-      padding: 12px 12px;
-    }
+    .drawer nav{ overflow:auto; padding-right:4px; }
+    .drawer .toc__list a{ font-size:1rem; padding:12px 12px; }
 
-    /* =========================================================
-       Main Article Area
-       ========================================================= */
-    main{
-      padding: 26px 0 90px;
-    }
-
+    main{ padding:26px 0 90px; }
     .wrap{
       max-width: calc(var(--max) + (var(--gutter) * 2));
-      margin: 0 auto;
-      padding: 0 var(--gutter);
+      margin:0 auto; padding:0 var(--gutter);
     }
 
-    .hero{
-      padding-top: 14px;
-      padding-bottom: 18px;
-    }
-
+    .hero{ padding-top:14px; padding-bottom:18px; }
     .kicker{
-      font-family: var(--font-head);
-      letter-spacing: .12em;
-      text-transform: uppercase;
-      font-size: .78rem;
-      color: var(--muted);
-      margin: 0 0 12px;
+      font-family:var(--font-head); letter-spacing:.12em; text-transform:uppercase;
+      font-size:.78rem; color:var(--muted); margin:0 0 12px;
     }
-
     h1{
-      font-family: var(--font-head);
-      font-size: var(--h1);
-      line-height: var(--lh-tight);
-      letter-spacing: -0.02em;
-      margin: 0 0 10px;
+      font-family:var(--font-head);
+      font-size:var(--h1); line-height:var(--lh-tight);
+      letter-spacing:-.02em; margin:0 0 10px;
     }
-
     .subtitle{
-      font-family: var(--font-head);
-      font-size: 1.15rem;
-      line-height: 1.35;
-      color: var(--muted);
-      margin: 0 0 18px;
-      max-width: 68ch;
+      font-family:var(--font-head);
+      font-size:1.15rem; line-height:1.35; color:var(--muted);
+      margin:0 0 18px; max-width:68ch;
     }
-
     .meta{
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 10px 14px;
-      font-family: var(--font-head);
-      color: var(--muted);
-      font-size: .92rem;
-      padding: 14px 14px;
-      border: 1px solid var(--rule);
-      border-radius: var(--radius);
+      display:flex; flex-wrap:wrap; align-items:center;
+      gap:10px 14px;
+      font-family:var(--font-head);
+      color:var(--muted); font-size:.92rem;
+      padding:14px 14px;
+      border:1px solid var(--rule);
+      border-radius:var(--radius);
       background: color-mix(in oklab, var(--bg-elev) 86%, transparent);
-      box-shadow: var(--shadow);
+      box-shadow:var(--shadow);
     }
-    .meta b{ color: var(--text); font-weight: 650; }
+    .meta b{ color:var(--text); font-weight:650; }
     .meta .pill{
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      border: 1px solid var(--rule);
+      display:inline-flex; align-items:center; gap:8px;
+      padding:6px 10px; border-radius:999px;
+      border:1px solid var(--rule);
       background: color-mix(in oklab, var(--faint) 100%, transparent);
-      font-size: .86rem;
+      font-size:.86rem;
     }
 
     .warning{
-      margin-top: 18px;
-      border-left: 3px solid var(--danger);
-      padding: 12px 14px 12px 14px;
+      margin-top:18px;
+      border-left:3px solid var(--danger);
+      padding:12px 14px;
       background: color-mix(in oklab, var(--danger) 10%, transparent);
-      border-radius: 14px;
+      border-radius:14px;
       color: color-mix(in oklab, var(--text) 92%, white 0%);
-      font-family: var(--font-head);
-      font-size: .95rem;
-      line-height: 1.45;
+      font-family:var(--font-head);
+      font-size:.95rem;
+      line-height:1.45;
     }
-    .warning b{
-      font-weight: 800;
-      letter-spacing: .08em;
-    }
+    .warning b{ font-weight:800; letter-spacing:.08em; }
 
-    article{
-      margin-top: 22px;
-    }
+    article{ margin-top:22px; }
+    article p{ margin:0 0 1.05em; }
+    article p.lede{ font-size:1.12rem; color: color-mix(in oklab, var(--text) 92%, transparent); }
 
-    article p{
-      margin: 0 0 1.05em;
-    }
-
-    article p.lede{
-      font-size: 1.12rem;
-      color: color-mix(in oklab, var(--text) 92%, transparent);
-    }
-
-    hr{
-      border: 0;
-      border-top: 1px solid var(--rule);
-      margin: 26px 0;
-    }
-
-    .divider{
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin: 20px 0 18px;
-      color: var(--muted);
-      font-family: var(--font-head);
-      letter-spacing: .14em;
-      text-transform: uppercase;
-      font-size: .72rem;
-    }
-    .divider::before, .divider::after{
-      content:"";
-      height: 1px;
-      background: var(--rule);
-      flex: 1;
-    }
+    /* Anchor offset fix: headings won't hide under sticky header/mobile toc */
+    h2, h3, #top { scroll-margin-top: calc(var(--sticky-stack) + 18px); }
 
     h2{
-      font-family: var(--font-head);
-      font-size: var(--h2);
-      line-height: 1.2;
-      letter-spacing: -0.01em;
-      margin: 2.0em 0 .6em;
+      font-family:var(--font-head);
+      font-size:var(--h2);
+      line-height:1.2;
+      letter-spacing:-.01em;
+      margin:2.0em 0 .6em;
     }
-
     h3{
-      font-family: var(--font-head);
-      font-size: var(--h3);
-      line-height: 1.25;
-      margin: 1.6em 0 .45em;
+      font-family:var(--font-head);
+      font-size:var(--h3);
+      line-height:1.25;
+      margin:1.6em 0 .45em;
       color: color-mix(in oklab, var(--text) 96%, transparent);
     }
-
-    .anchor{
-      color: inherit;
-    }
+    .anchor{ color:inherit; }
     .anchor:hover{
-      text-decoration: underline;
-      text-decoration-thickness: 2px;
-      text-underline-offset: 4px;
+      text-decoration:underline;
+      text-decoration-thickness:2px;
+      text-underline-offset:4px;
       text-decoration-color: color-mix(in oklab, var(--accent) 55%, transparent);
     }
 
     blockquote{
-      margin: 1.6em 0;
-      padding: 14px 18px;
-      border-left: 3px solid var(--accent);
+      margin:1.6em 0;
+      padding:14px 18px;
+      border-left:3px solid var(--accent);
       background: color-mix(in oklab, var(--bg-elev) 78%, transparent);
-      border-radius: 14px;
+      border-radius:14px;
       color: color-mix(in oklab, var(--text) 90%, transparent);
     }
-    blockquote p{ margin: 0; }
+    blockquote p{ margin:0; }
     blockquote cite{
-      display: block;
-      margin-top: 10px;
-      font-style: normal;
-      color: var(--muted);
-      font-family: var(--font-head);
-      font-size: .92rem;
+      display:block;
+      margin-top:10px;
+      font-style:normal;
+      color:var(--muted);
+      font-family:var(--font-head);
+      font-size:.92rem;
     }
 
-    .pull{
-      margin: 1.8em 0;
-      padding: 18px 18px;
-      border: 1px solid var(--rule);
-      background: color-mix(in oklab, var(--accent) 10%, transparent);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      font-family: var(--font-head);
-      font-size: 1.15rem;
-      line-height: 1.35;
-      letter-spacing: -0.01em;
-    }
+    hr{ border:0; border-top:1px solid var(--rule); margin:26px 0; }
 
-    code, pre{
-      font-family: var(--font-mono);
-      font-size: .92rem;
+    .divider{
+      display:flex; align-items:center; gap:12px;
+      margin:20px 0 18px;
+      color:var(--muted);
+      font-family:var(--font-head);
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      font-size:.72rem;
     }
-    code{
-      padding: .12em .35em;
-      border-radius: 10px;
-      background: color-mix(in oklab, var(--faint) 100%, transparent);
-      border: 1px solid var(--rule);
-    }
+    .divider::before, .divider::after{ content:""; height:1px; background:var(--rule); flex:1; }
 
-    .figure{
-      margin: 1.6em 0;
-    }
     figure{
-      margin: 0;
-      border-radius: var(--radius);
-      overflow: hidden;
-      border: 1px solid var(--rule);
+      margin:1.3em 0;
+      border-radius:var(--radius);
+      overflow:hidden;
+      border:1px solid var(--rule);
       background: color-mix(in oklab, var(--bg-elev) 86%, transparent);
-      box-shadow: var(--shadow);
+      box-shadow:var(--shadow);
     }
     .media{
-      display: block;
-      width: 100%;
-      height: auto;
-      aspect-ratio: 16 / 9;
+      display:block;
+      width:100%;
+      height:auto;
+      aspect-ratio:16/9;
       background:
         radial-gradient(700px 400px at 20% 15%, rgba(255,255,255,.08), transparent 45%),
         radial-gradient(600px 420px at 80% 30%, rgba(255,255,255,.06), transparent 55%),
         color-mix(in oklab, var(--bg-elev) 92%, transparent);
     }
-
-    figcaption{
-      padding: 12px 14px;
-      color: var(--muted);
-      font-family: var(--font-head);
-      font-size: .92rem;
-      line-height: 1.35;
-      border-top: 1px solid var(--rule);
-    }
-
-    /* Breakout wide figures */
-    .breakout{
-      width: min(var(--wide), 100%);
-      margin-left: 50%;
-      transform: translateX(-50%);
-    }
-    @media (max-width: 980px){
-      .breakout{
-        width: 100%;
-        margin-left: 0;
-        transform: none;
-      }
-    }
-
-    /* Video */
-    .video{
-      position: relative;
-      width: 100%;
-      aspect-ratio: 16 / 9;
-      background: color-mix(in oklab, var(--bg-elev) 90%, transparent);
-    }
-    .video iframe{
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      border: 0;
-    }
-
-    /* “Image placeholder” label */
     .placeholder{
-      position: relative;
-      display: grid;
-      place-items: center;
-      font-family: var(--font-head);
-      letter-spacing: .12em;
-      text-transform: uppercase;
-      font-size: .78rem;
-      color: var(--muted);
+      position:relative;
+      display:grid;
+      place-items:center;
+      font-family:var(--font-head);
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      font-size:.78rem;
+      color:var(--muted);
     }
     .placeholder::after{
       content: attr(data-label);
-      position: absolute;
-      bottom: 14px;
-      left: 14px;
-      right: 14px;
-      padding: 10px 12px;
-      border-radius: 12px;
-      border: 1px solid var(--rule);
+      position:absolute;
+      bottom:14px;
+      left:14px;
+      right:14px;
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid var(--rule);
       background: color-mix(in oklab, var(--bg) 65%, transparent);
-      box-shadow: var(--shadow);
-      letter-spacing: .10em;
+      box-shadow:var(--shadow);
+      letter-spacing:.10em;
+      text-align:left;
+    }
+    figcaption{
+      padding:12px 14px;
+      color:var(--muted);
+      font-family:var(--font-head);
+      font-size:.92rem;
+      line-height:1.35;
+      border-top:1px solid var(--rule);
     }
 
-    /* Footnotes */
+    .video{
+      position:relative;
+      width:100%;
+      aspect-ratio:16/9;
+      background: color-mix(in oklab, var(--bg-elev) 90%, transparent);
+    }
+    .video .placeholder::after{ bottom:12px; }
+
     .footnotes{
-      margin-top: 46px;
-      padding-top: 18px;
-      border-top: 1px solid var(--rule);
+      margin-top:46px;
+      padding-top:18px;
+      border-top:1px solid var(--rule);
     }
-    .footnotes ol{
-      margin: 12px 0 0;
-      padding-left: 1.1em;
-      color: var(--muted);
-    }
-    .footnotes li{
-      margin: 0 0 .85em;
-    }
-    .footnotes a{
-      color: var(--link);
-    }
+    .footnotes ol{ margin:12px 0 0; padding-left:1.1em; color:var(--muted); }
+    .footnotes li{ margin:0 0 .85em; }
 
-    .backtop{
-      margin-top: 34px;
-      display: flex;
-      justify-content: center;
-    }
+    .backtop{ margin-top:34px; display:flex; justify-content:center; }
     .backtop a{
-      border: 1px solid var(--rule);
+      border:1px solid var(--rule);
       background: color-mix(in oklab, var(--bg-elev) 86%, transparent);
-      border-radius: 999px;
-      padding: 12px 14px;
-      font-family: var(--font-head);
-      color: var(--text);
-      box-shadow: var(--shadow);
+      border-radius:999px;
+      padding:12px 14px;
+      font-family:var(--font-head);
+      color:var(--text);
+      box-shadow:var(--shadow);
     }
 
-    /* Small helpers */
-    .small{
-      font-family: var(--font-head);
-      color: var(--muted);
-      font-size: .92rem;
-    }
-
-    /* Motion preferences */
     @media (prefers-reduced-motion: reduce){
-      *{ scroll-behavior: auto !important; transition: none !important; animation: none !important; }
+      *{ scroll-behavior:auto !important; transition:none !important; animation:none !important; }
     }
   </style>
 </head>
@@ -779,7 +441,7 @@
     <div class="progress__bar" id="progressBar"></div>
   </div>
 
-  <header class="site">
+  <header class="site" id="siteHeader">
     <div class="site__inner">
       <div class="brand">
         <div class="brand__name">DAECLAN.COM</div>
@@ -795,31 +457,28 @@
           <button type="button" class="themeBtn" data-theme="red" aria-pressed="false">Red</button>
         </div>
 
-        <div class="mini" aria-label="Page utilities">
-          <span>Reading</span>
-          <span aria-hidden="true">•</span>
-          <a href="#top">Top</a>
+        <div class="font" role="group" aria-label="Font picker">
+          <button type="button" class="fontBtn" data-font="ebg" aria-pressed="true" title="EB Garamond">Garamond</button>
+          <button type="button" class="fontBtn" data-font="source" aria-pressed="false" title="Source Serif 4">Source</button>
+          <button type="button" class="fontBtn" data-font="lora" aria-pressed="false" title="Lora">Lora</button>
+          <button type="button" class="fontBtn" data-font="plex" aria-pressed="false" title="IBM Plex Serif">Plex</button>
         </div>
       </div>
     </div>
   </header>
 
   <div class="shell" id="top">
-    <!-- Desktop TOC -->
     <aside class="toc" aria-label="Table of contents (desktop)">
       <div class="toc__title">Contents</div>
       <ul class="toc__list" id="tocList"></ul>
       <div class="toc__meta" id="tocMeta">
         <span><b id="metaWordCount">—</b> words</span>
         <span><b id="metaReadTime">—</b> min read</span>
-        <span class="small">Tip: Use the theme picker for Light/Dark/Blue/Red.</span>
       </div>
     </aside>
 
-    <!-- Main column -->
     <div>
-      <!-- Mobile TOC -->
-      <div class="mobile-toc" aria-label="Table of contents (mobile)">
+      <div class="mobile-toc" id="mobileToc" aria-label="Table of contents (mobile)">
         <div class="mobile-toc__inner">
           <button type="button" class="mobile-toc__btn" id="openDrawer" aria-haspopup="dialog" aria-controls="drawer" aria-expanded="false">
             <span class="dot" aria-hidden="true"></span>
@@ -829,7 +488,6 @@
         </div>
       </div>
 
-      <!-- Drawer -->
       <div class="drawer" id="drawer" role="dialog" aria-modal="true" aria-label="Contents drawer">
         <div class="drawer__backdrop" id="drawerBackdrop" aria-hidden="true"></div>
         <div class="drawer__panel">
@@ -851,42 +509,47 @@
         <div class="wrap">
           <section class="hero">
             <p class="kicker">Longform Essay</p>
-
             <h1>Of Knights and Men: Chess and Myth in Kubrick’s Body</h1>
             <p class="subtitle">The Hidden Visual Language of Horses, Knights, Strategy, and Failure in <em>Eyes Wide Shut</em></p>
 
             <div class="meta">
               <span>By <b>Declan Murphy</b></span>
               <span aria-hidden="true">•</span>
-              <span><b id="metaDate">December 14, 2025</b></span>
+              <span><b id="metaDate">December 15, 2025</b></span>
               <span class="pill"><span aria-hidden="true">⟡</span> <span id="metaReadTime3">—</span> min read</span>
-              <span class="pill"><span aria-hidden="true">⌁</span> Kubrick / Myth / Chess</span>
             </div>
 
             <div class="warning" role="note" aria-label="Content warning">
-              <b>WARNING</b> – This essay discusses sexual symbolism, adult themes, and interpretations involving children as they appear in Stanley Kubrick’s films.
-              Nothing described here refers to real people or real events, but the analysis touches on material that some readers may find uncomfortable or triggering.
-              Please read with caution and take care of yourself.
+              <b>WARNING</b> – This essay discusses sexual symbolism, adult themes, and interpretations involving children as they appear in Stanley Kubrick’s films. Nothing described here refers to real people or real events, but the analysis touches on material that some readers may find uncomfortable or triggering. Please read with caution and take care of yourself.
             </div>
           </section>
 
+          <!-- =========================================================
+               YOUR UPDATED TEXT (verbatim) STARTS HERE
+               ========================================================= -->
           <article id="article" aria-label="Essay content">
-            <p class="lede">Welcome to my theory of knights and horses in <em>Eyes Wide Shut</em>. There are many like it, but this one is mine. Very special thanks to Juli Kearns (Idyllopus Press), M (u/33doeyeswideshut), and M.H., the three of you have redefined how I see the world and you helped me see the light in different ways. Depending on how one looks at this movie, it’s either a brilliant, layered comedy, or the scariest film I have ever seen. It’s like that old image of a hag that, when you flip it upside down, is a beautiful young woman. A living, breathing optical illusion rendered by the greatest director ever to touch film.</p>
+
+            <p class="lede"><b>Author’s Note:</b><br>
+            Welcome to my theory of knights and horses in <em>Eyes Wide Shut</em>. There are many like it, but this one is mine. Very special thanks to Juli Kearns (Idyllopus Press), M (u/33doeyeswideshut), and M.H., the three of you have redefined how I see the world and you helped me see the light in different ways.</p>
+
+            <p>This is the densest film ever made. Depending on how you look at it, <em>Eyes</em> is either a brilliant, layered comedy, or the scariest film you will ever see. It’s like that old image of a hag that, when you flip it upside down, is a beautiful young woman. A living, breathing optical illusion rendered by the greatest director ever to touch film.</p>
 
             <p>Before we begin, I want to set the table with a rare interview Kubrick gave during the press tour for <em>Full Metal Jacket</em> in 1987. At the time, Kubrick was living in England but still enjoyed American culture from a distance. It always stuck with me that Kubrick seemed more impressed by the minute long beer advertisements than the NFL games he was sent from America:</p>
 
             <blockquote>
-              <p>“The Michelob commercials. I'm a pro-football fan, and I have videotapes of the games sent over to me, commercials and all. Last year Michelob did a series, just impressions of people having a good time, the big city at night. And the editing, the photography, was some of the most brilliant work I've ever seen. Forget what they're doing - selling beer - and it's visual poetry. Incredible eight-frame cuts. And you realize that in thirty seconds they've created an impression of something rather complex. If you could ever tell a story, something with some content, using that kind of visual poetry, you could handle vastly more complex and subtle material.”</p>
-              <cite>Stanley Kubrick, press tour interview (1987)</cite>
+              <p>“The Michelob commercials. I'm a pro-football fan, and I have videotapes of the games sent over to me, commercials and all. Last year Michelob did a series, just impressions of people having a good time, the big city at night.
+              And the editing, the photography, was some of the most brilliant work I've ever seen. Forget what they're doing - selling beer - and it's visual poetry. Incredible eight-frame cuts. And you realize that in thirty seconds they've created an impression of something rather complex. If you could ever tell a story, something with some content, using that kind of visual poetry, you could handle vastly more complex and subtle material.”</p>
             </blockquote>
 
             <p>Twelve years before he began filming <em>Eyes</em>, Kubrick was speaking publicly and emphatically about extending these techniques into a longform storytelling method in order to deliver a kind of expression that had never been done before. An experimental film that would be able to take what Michelob did in 30 seconds and stretch it over hours, exploring subjects and ideas in brilliant new ways. He achieved this vision with <em>Eyes</em>, and left us a deep, mysterious final puzzle for us to explore and understand.</p>
 
-            <p>With the above in mind, the volume of information Kubrick is presenting through this technique is overwhelming, and one of the reasons this particular theory has gone undiscovered for so long is the fatigue you will likely encounter with the material. For that reason, I ask that you take your time and review the evidence I'm presenting. I will attempt to be thorough, but simply cannot explore the many of the tangents that lie at the edges of this theory. There are many layers to this film, and I do not believe this theory’s layer discounts any of the great work I’ve seen from my fellow enthusiasts, and I hope this inspires the world to use this key to find other layers to share.</p>
+            <p>With the above in mind, the volume of information Kubrick is presenting (and I’m presenting) through this technique is overwhelming, and one of the reasons this particular theory has gone undiscovered for so long is the fatigue you will likely encounter with the material. For that reason, I ask that you take your time and review the evidence I'm presenting. I will attempt to be thorough, but simply cannot explore the many of the tangents that lie at the edges of this theory. There are many layers to this film, and I do not believe this theory’s layer discounts any of the great work I’ve seen from my fellow enthusiasts, and I hope this inspires the world to use this key to find other layers to share.</p>
 
             <p>We’ll assume that, if you are taking time to grapple with this monstrous essay, you are deeply familiar with Eyes’ lore, specifically the theory that Bill and Alice’s young daughter Helena is left imperiled (or at the very least, left to wander alone in a crowded store for three full minutes) in the final minutes of the film. We’ll assume, too, that you are familiar with Kubrick’s history of skillfully skirting censors throughout his career while managing to explore deeply taboo subjects in his films, specifically <em>Lolita</em> and <em>A Clockwork Orange</em>. As we dive under the surface layer of Eyes, we will find a world of symbols; myths, magic, humor, and tragedy.</p>
 
-            <p>The primary symbol we will focus on are the horses of <em>Eyes Wide Shut</em>, which point to a hidden game paralleling the surface level plot. This film, to some, is a one dimensional exploration of sexual jealousy. This couldn’t be further from the truth, and when one begins to understand the subtle and complex world that Kubrick created through these advanced advertising techniques, they will begin to see the film in a whole new light. The implications of this inclusion confirm that his final masterpiece was a children’s puzzle built for adults, built by a brilliant chess-minded strategist for an obsessive audience known for rewinding, rewatching, inspecting and admiring his frames as if they were paintings.</p>
+            <p>The primary symbol we will focus on are the horses of <em>Eyes Wide Shut</em>, which point to a hidden game paralleling the surface level plot. We’ll explore the horse as a deep, layered web of symbolism conjuring the spirit of Eros, the human drive for survival, love, creation, and self-preservation through sexuality, bonding, building, and pleasure.</p>
+
+            <p>This film, to some, is a one dimensional exploration of sexual jealousy. This couldn’t be further from the truth, and when one begins to understand the subtle and complex world that Kubrick created through these advanced advertising techniques, they will begin to see the film in a whole new light. The implications of this inclusion confirm that his final masterpiece was a children’s puzzle built for adults, built by a brilliant chess-minded strategist for an obsessive audience known for rewinding, rewatching, inspecting and admiring his frames as if they were paintings.</p>
 
             <h2 id="part-i"><a class="anchor" href="#part-i">Part I: Mythical Chess, Screen as Game</a></h2>
 
@@ -902,7 +565,7 @@
 
             <p>Twenty six years later, Eyes still holds the world record for longest movie shoot in history, providing Kubrick the time and space he needed to work this symbology into each aspect of his vision. During this long shoot, he reportedly shot takes of Tom Cruise walking through a doorway as many as 95 times in a row, leading Harvey Keitel to quit the film in protest of Kubrick’s demanding nature. This is to say, nothing was shot or left in frame by accident, and every move advanced us towards his endgame.</p>
 
-            <div class="divider">•••</div>
+            <p>•••</p>
 
             <p>In the game of chess, you are given six pieces to fight with. One of those pieces is shaped like a horse's head and is called the knight. A knight, in the context of kings and queens, is the soldier who has mastered the horse as a weapon, turning a peaceful animal into a collaborative vehicle of violence. The combination of the horse’s power with the knight’s weaponry morphed the sum into something greater than its parts; heavier, faster, and tactically unpredictable. This hybrid pair, combining half man and half beast, provides a major insight into Kubrick’s symbolic language and echoes the name of his first company, Minotaur Productions. The fighting spirit, in both human and animal, merge into a singular mechanism designed to outflank, outmaneuver, and surprise.</p>
 
@@ -926,7 +589,7 @@
 
             <p>Like the knight, Anubis is a hybrid force combining human purpose and animal power, operating at strategic angles instead of directly. If pharaohs, kings, and queens represent order, law, and lineage, then Anubis represents the otherworldly energy that quietly moves between those structures, carrying vital subjects from one place into another. Through this symbolic interpretation, the knight is not just a weapon or a trick piece, but an agent of carriage, transition, appearing exactly when a boundary is about to be crossed, or when something irreversible is about to be set in motion.</p>
 
-            <div class="divider">•••</div>
+            <p>•••</p>
 
             <p>The film is based on Arthur Schnitzler’s 1926 novella, <em>Traumnovelle</em>, but Kubrick made many creative changes to the source material, as he did with many of his adaptations. While we can’t cover all of the changes, the three Harford family members’ names are worth acknowledging through these frameworks.</p>
 
@@ -950,22 +613,11 @@
 
             <p>Charlotte picks up a knight asking Humbert how it moves, and he clarifies that the knight can “leap over the other players.” Charlotte responds that it “goes around corners,” just as Lolita walks into the frame, drifting into the background behind Humbert. Charlotte then says, worriedly, “you’re going to take my queen,” to which Humbert retorts “that is my intention, certainly” as Lolita leans on his chair and makes contact with him.</p>
 
-            <!-- {vid1} placeholder -> video embed block -->
-            <div class="figure breakout" id="vid1">
-              <figure>
-                <div class="video" aria-label="Embedded video placeholder: Lolita chess scene">
-                  <!-- Replace VIDEO_ID with your YouTube ID (or swap to self-hosted video) -->
-                  <iframe
-                    src="https://www.youtube-nocookie.com/embed/VIDEO_ID?rel=0"
-                    title="Lolita — Chess scene (placeholder)"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    allowfullscreen></iframe>
-                </div>
-                <figcaption>
-                  <b>Video placeholder:</b> Insert the <em>Lolita</em> chess scene clip here. Replace <code>VIDEO_ID</code> in the iframe URL.
-                </figcaption>
-              </figure>
-            </div>
+            <!-- Placeholder exactly as you wrote it -->
+            <figure>
+              <div class="video placeholder" data-label="{vid1}"></div>
+              <figcaption>Video placeholder: {vid1}</figcaption>
+            </figure>
 
             <p>Charlotte dismisses Lolita to bed, and instead of utilizing her knight, moves her queen into a precarious position. Humbert smugly says “well, that wasn’t very clever of you” and picks up his knight, taking her queen as predicted, and visibly enjoying Lolita’s goodnight kiss a little too much.</p>
 
@@ -979,7 +631,7 @@
 
             <p>Once you see that, the horse statue staring at Helena’s photo in Bill’s office stops being a cute bit of set dressing. It is a callback, an echo of a world Kubrick carefully explored decades prior. A warning that we are watching a new version of the same pattern play out, this time in Manhattan, this time with a doctor who assumes he’s safe because he isn’t that kind of man, and never notices the board already forming around him.</p>
 
-            <div class="divider">•••</div>
+            <p>•••</p>
 
             <p>In <em>2OO1: A Space Odyssey</em> (1968), Kubrick gives us another loaded knight reference that perhaps is the single best example of this symbol in his whole body of work, and it happens in such a subtle and forgettable way that most people never clock it.</p>
 
@@ -999,7 +651,7 @@
 
             <p>Thirty years later, we finally arrive back at Eyes Wide Shut, where the symbols are much more subtle, but the impact is magnified by the pattern Kubrick has laid out in his early work. Bill believes the danger is following and punishing him for wanting sex and answers, but every time the horse symbol appears, its gaze moves past him and settles on Helena. The subtle knight continually advances, not across Bill’s marital board, but across a generational one. Bill is so preoccupied with his failures and his unanswered questions that he fails to see the signs that he is in danger. He’s busy fantasizing about what will happen to him, while Kubrick is subtly revealing what will happen to his family.</p>
 
-            <h2 id="part-iii"><a class="anchor" href="#part-iii">Part III: Bill’s Office &amp; The Black Knight</a></h2>
+            <h2 id="part-iii"><a class="anchor" href="#part-iii">Part III: Bill’s Office &amp; The Adult’s Knight</a></h2>
 
             <p>Beyond mythological studies, Kubrick was a voracious reader and amassed massive personal libraries of psychology, philosophy, and behavioral science studies. He would order specialized texts on subjects like psychoanalysis, group psychology and sociology. In line with thinking through the lens of chess and mythology, Kubrick applied these social studies to help inform and reflect the nature of the psychological aspects of a scene’s content. We’ll use this framework to explore the interior and exterior spaces of our characters.</p>
 
@@ -1011,21 +663,17 @@
 
             <p>In the very next scene, we are finally able to see inside of Bill’s office. Sitting at his desk, we find a distressed Bill picturing his wife and her naval fantasy officer engaging in sexual foreplay. The objects that populate his office not only appear to be a reflection of his inner thoughts, but after this first scene they begin to shift in plain sight. Behind Bill on the credenza there are holiday cards, and a brown file accordion with a newspaper on top:</p>
 
-            <div class="figure breakout">
-              <figure>
-                <div class="media placeholder" data-label="OFFICE 1.JPG (replace with your still)" role="img" aria-label="Placeholder for OFFICE 1 screenshot"></div>
-                <figcaption>Replace this placeholder with <code>OFFICE 1.JPG</code> (your still). Recommended: 16:9 crop, high-res.</figcaption>
-              </figure>
-            </div>
+            <figure>
+              <div class="media placeholder" data-label="OFFICE 1.JPG"></div>
+              <figcaption>Placeholder: OFFICE 1.JPG</figcaption>
+            </figure>
 
             <p>There is a knock at the door, and his assistant walks in, giving us a wider shot of the interior. From here we can see a small framed photograph of Helena, who appears to be playing piano, and an object that (after a long Google) I was able to confirm is a kinetic energy desktop toy. Described as a “cyclical perpetual motion machine,” the mechanism propels two teal dolphins in circles as it repeatedly spins, endlessly—the twin teal dolphins appear visually echoing the two teal fish-like statues we see in Ziegler’s upstairs bathroom. Note too that the window sill is empty, and unadorned:</p>
 
-            <div class="figure breakout">
-              <figure>
-                <div class="media placeholder" data-label="OFFICE 2.JPG (replace with your still)" role="img" aria-label="Placeholder for OFFICE 2 screenshot"></div>
-                <figcaption>Replace with <code>OFFICE 2.JPG</code>.</figcaption>
-              </figure>
-            </div>
+            <figure>
+              <div class="media placeholder" data-label="OFFICE 2.JPG"></div>
+              <figcaption>Placeholder: OFFICE 2.JPG</figcaption>
+            </figure>
 
             <p>In this short scene he asks for his assistant to reschedule his appointments and to retrieve his car, and the following sequence provides Bill multiple opportunities to disengage, but doesn’t. He drives back to Somerton and is issued the second, formal written warning. Stopping home for a quick beer, Bill encounters Alice and Helena at the dining room table. Alice is teaching their daughter about addition and subtraction—the very thing Kubrick is doing with objects in the mise en scene. Bill then lies to Alice about needing to go back out for official doctor business, when really he is still horny, angry, unfulfilled, and confused.</p>
 
@@ -1033,184 +681,169 @@
 
             <p>On the window sill behind Bill, there’s now a dark statue of a horse. On the credenza, to its left, there is a new and bigger framed photograph of Helena with black gloves on, holding what looks like a hockey stick. Additionally, there is now a single circular black-and-gold mask that wasn’t there before, visually in the same family as the African masks on Domino’s walls. On the desk in front of Bill there are four rubber bands, two of them overlapping, like a Venn diagram making a vesica piscis:</p>
 
-            <div class="figure breakout">
-              <figure>
-                <div class="media placeholder" data-label="OFFICE 2.JPG (night changes) — replace with correct still" role="img" aria-label="Placeholder for OFFICE changes screenshot"></div>
-                <figcaption>Swap in the correct night-office still (you labeled this as <code>OFFICE 2.JPG</code> again).</figcaption>
-              </figure>
-            </div>
+            <figure>
+              <div class="media placeholder" data-label="OFFICE 2.JPG"></div>
+              <figcaption>Placeholder: OFFICE 2.JPG (your second-night version)</figcaption>
+            </figure>
 
-            <p>The horse statue looks like an oversized chess piece, a big black Knight, and it’s angled diagonally so it is staring straight at the new, bigger framed photo of Helena, as if whatever force put that object there was strategizing and setting up an attack on, or a capture of Helena. Directly in line with the knight and Helena is the newspaper from earlier, but now there is the distinct shape of a man is now visible in the bottom right corner:</p>
+            <p>The horse statue looks like an oversized black chess piece, the adult’s knight, and it’s angled diagonally so it is staring straight at the new, bigger framed photo of Helena, as if whatever force put that object there was strategizing and setting up an attack on, or a capture of her. Directly in line with the knight and Helena is the newspaper from earlier, but now there is the distinct shape of a man is now visible in the bottom right corner:</p>
 
-            <div class="figure breakout">
-              <figure>
-                <div class="media placeholder" data-label="[CLOSE UP.JPG] (replace with your close-up)" role="img" aria-label="Placeholder for close-up screenshot"></div>
-                <figcaption>Replace with your close-up still: <code>[CLOSE UP.JPG]</code>.</figcaption>
-              </figure>
-            </div>
+            <figure>
+              <div class="media placeholder" data-label="[CLOSE UP.JPG]"></div>
+              <figcaption>Placeholder: [CLOSE UP.JPG]</figcaption>
+            </figure>
 
             <p>Bill has been captured by the thought of his wife and the naval officer, and sits alone picturing the encounter. This time the sexual images are more violent, more aggressive, depicting Alice moaning. Desperate to assert himself, Bill picks up the phone and dials Marion to make good on her advances from the night before. Instead, the call is intercepted by Marion’s fiance, Carl, who answers the phone and blocks Bill’s attempt.</p>
 
             <p>When we cut back to Bill, he is now aligned perfectly with the black and gold mask, his body obscuring it completely. While the horse statue should be over his shoulder, it’s ears popping into frame when he shifts, it isn’t. The symbol for clever strategic advances has been subtly subtracted while Bill making a foolish move on Marion:</p>
 
-            <div class="figure breakout">
-              <figure>
-                <div class="media placeholder" data-label="OFFICE 3.JPG (replace with your still)" role="img" aria-label="Placeholder for OFFICE 3 screenshot"></div>
-                <figcaption>Replace with <code>OFFICE 3.JPG</code>.</figcaption>
-              </figure>
-            </div>
+            <figure>
+              <div class="media placeholder" data-label="OFFICE 3.JPG"></div>
+              <figcaption>Placeholder: OFFICE 3.JPG</figcaption>
+            </figure>
 
             <p>Having failed again, Bill looks deflated and embarrassed. To visually echo his shame, one of the rubber bands that was on the table is now wrapped around and binding the fingers of his left hand. The mask reappears, the horse statue still angled at Helena, who is trapped between it and the man on the newspaper:</p>
 
-            <div class="figure breakout">
-              <figure>
-                <div class="media placeholder" data-label="OFFICE 4.JPG (replace with your still)" role="img" aria-label="Placeholder for OFFICE 4 screenshot"></div>
-                <figcaption>Replace with <code>OFFICE 4.JPG</code>.</figcaption>
-              </figure>
-            </div>
+            <figure>
+              <div class="media placeholder" data-label="OFFICE 4:"></div>
+              <figcaption>Placeholder: OFFICE 4:</figcaption>
+            </figure>
 
             <p>Kubrick doesn’t add or subtract props unless there is something to be communicated. The statue works as a Trojan Horse entering the swirling world of Bill’s psyche, his private, personal area invaded and rearranged. The arrival of this object reads as a chess move from an unseen player, a knight advancing to put the Harfords in check. The internal chaos Bill is experiencing is being visibly represented; as Alice’s fantasies play in Bill's waking world, the primal, animal rhythms and the threats on his family enter the otherwise clean, clinical space of Bill’s profession.</p>
 
             <p>Bill appears oblivious to the changes and the dangers that move around him, he doesn’t even seem to be bothered that he just witnessed child prostitution in broad daylight. He is so singularly wrapped up in his fragility and failures that he doesn’t even notice that his family is now being targeted, his daughter is now in the eyeline of a strategic enemy. He doesn’t realize his space has been invaded, that his family’s future is in the balance.</p>
 
-            <h2 id="part-iv"><a class="anchor" href="#part-iv">Part IV: Harford’s Apartment &amp; The White Knight</a></h2>
+            <h2 id="part-iv"><a class="anchor" href="#part-iv">Part IV: Harford’s Apartment &amp; The Child’s Knight</a></h2>
 
-            <p>When I first set out to write this, the knight we saw appear in Bill’s office was my only example from within the film. During my research, I was delighted to be shown a second horse appearance towards the end of the film. Suspicious that the horse may have appeared earlier, I began to scan the mise en scene from the beginning and could not believe my eyes. Not only does the horse appear twice, its placement and movement is even more subtle and loaded than the office knight.</p>
+            <p>When I first set out to write this, the knight we saw appear in Bill’s office was my only direct visual example from within the film. During my research, I was delighted to be shown a second horse appearance towards the end of the film. Hoping that the horse may have appeared earlier, I began to scan the mise en scene from the beginning and could not believe my eyes. Not only does the horse appear twice, its placement and movement is even more subtle and loaded than the office knight, the adult knight.</p>
 
-            <p>In order to see this knight, we venture back to the first setting of the film, the Harford Apartment. Standing quietly on the dining room table as when Bill and Alice hand Helena off to Roz the babysitter, is the very first appearance of a horse. Unlike the dark statue in Bill’s office, this white toy horse has blonde hair and a teal saddle, appearing to belong to Helena. Where it stands is exactly where Alice will later teach her math problems about which man has more money and power, indirectly teaching her to consider which partner would be a better strategic move:</p>
+            <p>In order to see this knight, the child’s knight, we venture back to the first setting of the film, the Harford Apartment. Standing quietly on the dining room table as when Bill and Alice hand Helena off to Roz the babysitter, is the very first appearance of a horse. Unlike the dark statue in Bill’s office, this white toy horse has blonde hair and a teal saddle, appearing to belong to Helena. Where it stands is exactly where Alice will later teach her math problems about which man has more money and power, indirectly teaching her to consider which partner would be a better strategic move:</p>
 
-            <div class="figure breakout">
-              <figure>
-                <div class="media placeholder" data-label="APARTMENT 1.JPG (replace with your still)" role="img" aria-label="Placeholder for APARTMENT 1 screenshot"></div>
-                <figcaption>Replace with <code>APARTMENT 1.JPG</code>.</figcaption>
-              </figure>
-            </div>
+            <figure>
+              <div class="media placeholder" data-label="APARTMENT 1.JPG"></div>
+              <figcaption>Placeholder: APARTMENT 1.JPG</figcaption>
+            </figure>
 
-            <p>In this brief scene, there is a dark thematic rhyme with The Nutcracker, the ballet Helena begs her parents for permission to stay up and watch on TV while they go party. The story is about a young girl drawn into a fantasy world where her toys come alive at night and move by themselves while the adults are elsewhere. The narrative structure of The Nutcracker echoes this exact moment, where Bill and Alice disappear into their adult fun, and the child’s toy becomes animated and moves to a new position.</p>
+            <p>In this brief scene, there is a dark thematic rhyme with The Nutcracker, the ballet that Helena asks her parents to stay up and watch TV while they go party. The story is about a young girl drawn into a fantasy world where her toys come alive at night and move by themselves while the adults are elsewhere. The narrative structure of The Nutcracker parallels this exact moment, where Bill and Alice disappear into their adult fun, and the child’s toy becomes animated and moves to a new position.</p>
 
-            <p>Later, when Bill comes home from the orgy carrying the costume which, ironically, failed to disguise him or allow him to become the Trojan Horse, he checks on Helena in her room as she sleeps. After ensuring she is safe, he then walks down the hallway and through the living room. As the camera tracks him, we now see the white, blonde haired horse with a teal saddle sitting on the bookshelf in the living room, now facing right down the hallway and the room Bill just walked away from:</p>
+            <p>Later, when Bill comes home from the orgy carrying the costume which, ironically, failed to disguise him, he checks on Helena in her room as she sleeps. After ensuring she is safe, he then walks down the hallway and through the living room. As the camera tracks him, we now see the white, blonde haired horse with a teal saddle sitting on the bookshelf in the living room, now facing right down the hallway and the room Bill just walked away from:</p>
 
-            <div class="figure breakout">
-              <figure>
-                <div class="media placeholder" data-label="APARTMENT 3.JPG (replace with your still)" role="img" aria-label="Placeholder for APARTMENT 3 screenshot"></div>
-                <figcaption>Replace with <code>APARTMENT 3.JPG</code>.</figcaption>
-              </figure>
-            </div>
+            <figure>
+              <div class="media placeholder" data-label="APARTMENT 3.JPG"></div>
+              <figcaption>Placeholder: APARTMENT 3.JPG</figcaption>
+            </figure>
 
-            <p>The toy horse has migrated from the dining room table, where Helena and Alice will later sit and work out which man in the math equation has more money. Alice is not just teaching her math, she is indirectly helping her understand value and power in modern society. This seemingly inconsequential decision connects directly with Bill’s social dynamic, as we witness him continue to fumble around the world of the elites, a world that Bill has little power in and is merely a servant to.</p>
+            <p>The toy horse has moved from the dining room table, where Helena and Alice will later sit and work out which man in the math equation has more money. Alice is not just teaching her daughter math, she is indirectly helping her understand the dynamics of value and power in modern society. This seemingly inconsequential decision connects directly with Bill’s struggle with his own social status, as we witness him continue to fumble around the world of the elites, a world where Bill is merely a servant.</p>
 
-            <p>When one maps the horse’s movement from a bird’s eye view, it doesn’t simply change spots, it travels in the shape of an L, a literal knight path through the Harford home. From its starting point on the dining table, through the open doorway, and then left onto the living room shelf, a quiet mirroring of the knight’s unique move on a board. This is the exact kind of subtle, hidden mechanical joke Kubrick loved, turning a prop change into a little inside-chess-joke that most viewers will never consciously register. What truly matters about this development is not that the horse moves, but what it moves toward.</p>
+            <p>Mapping the horse’s movement from a bird’s eye view, it doesn’t simply change spots. It is no accident that it travels in the shape of an L; a knight path through the Harford home. From its starting point on the dining table, through the open doorway, and then left onto the living room shelf, a subtle mirroring of the knight’s unique move on a board. This is the exact kind of inside, hidden mechanical joke Kubrick loved, turning a prop change into a reflection of his thematic strategy that most viewers will never consciously register. What truly matters about this development is not that the horse moves, but what it moves toward.</p>
 
-            <p>In each appearance, the horse’s head points in Helena’s direction: on the dining table it angles toward the couch where she sits. First we see the horse pointing left at where Helena sits on the couch of the Harford living room, then in Bill’s office shelf as it stares directly at her framed portrait, and then finally one last time when Bill returns home after Somerton, the horse facing down the hallway toward Helena’s bedroom where Bill just saw her sleeping. The knight isn’t following Bill, it’s locked on Helena. Bill imagines he’s the one making moves, crossing thresholds, when the horse’s line of sight tells a completely different story. Bill is chasing his shadow, his bruised ego and desires in the night, but a serious game has already focused in on his daughter.</p>
+            <p>In each appearance, the horse’s head points in Helena’s direction. In the beginning of the film, the child’s knight on the dining table angles toward the couch where she sits. Next, in Bill’s office we see the adult’s knight on the shelf as it stares directly at her framed portrait. Finally, we see the child’s knight one last time when Bill returns home after Somerton, the horse facing down the hallway toward Helena’s bedroom where Bill just saw her sleeping. By this point, Helena is trapped between the child’s knight and the adult’s knight, a visual symbolic gesture that suggests another hidden theme.</p>
 
-            <p>The very next thing he does after walking past that horse is go to his home office to hide his disguise, to mask his mask, the symbol of his own failed initiation into the ritual world. This symbolic serves as connective tissue to Part II, his other office scene at work. When Bill enters his home office, he crouches down and removes an accordion file folder to make room for the Rainbow Fashions bag. He places the brown accordion file folder on the credenza, mirroring the one sitting in front of the newly added portrait of Helena in his work office, the one with the newspaper and the unnamed man.</p>
+            <p>Helena is a child in an adult’s world, an innocent observer caught in between the mature themes her parents are exploring. In this way, trapped between the child and the adult, the symbols combine to suggest that the underlying animal drive we’ve been tracking is indicative of the changes children go through at puberty, and that Helena is being expected to grow up—perhaps sooner than her parents want her to. This theme of animating animals, like in The Nutcracker, points to the magic, invisible interchanges we experience—the human body and the animal instinct fusing you into the infamous teenage years.</p>
+
+            <p>The knights aren’t following Bill, they are locked on Helena. Bill imagines he’s the one making moves, crossing thresholds, when the horse’s line of sight tells a completely different story. Bill’s time is over but he continues to chase the shadow of his youth, his bruised ego and desires in the night while a serious game has already focused in on his daughter’s future.</p>
+
+            <p>After Bill walks past the white knight, he enters his home office to hide his disguise, to mask his mask, he crouches down in front of his credenza and removes an accordion file folder to make room for the Rainbow Fashions bag. This interaction with what is in vs. what is on his credenza connects us back to Part II, his other office scene at work. By placing the brown accordion file on top of the credenza, he connects these spaces, mirroring the accordion file we observe sitting in front of the newly added portrait of Helena in his work office, the one with the newspaper and the unnamed man.</p>
 
             <p>We’ll find out later that his mask is subtracted in the process of adding it to his office, and it will not be in the bag when he returns to Rainbow Fashions the next morning. The knight is advancing on his child while his wife lies in bed laughing, dreaming of sexual encounters with so many men she loses count.</p>
 
             <h2 id="part-v"><a class="anchor" href="#part-v">Part V: Missing Puzzle Pieces: Helena’s Cut Scene &amp; Alice’s Dream Storyboard</a></h2>
 
-            <p>This is where I believe we are entering unexplored and vital cut material that we should not necessarily recognize as canon, should not be outright dismissed for their lack of inclusion in the finished film. Importantly, the editor of Eyes Wide Shut, Nigel Galt, confirmed in a November 2025 interview that “There was nothing missing [from the cut that was publicly released] . That cut is Stanley’s cut the day he died. And nothing was over-edited.” This confirms that nothing nefarious took place during the final stages of editing, and finally puts to rest the rampant conspiracy theory that 23 minutes were cut from the film after his death, which has loomed over the film since its release. However, this does not mean that Kubrick hadn’t theorized, developed, and even shot more material that would have made these symbolic and thematic connections easier to make. This is where the theory also gets uncomfortable for some, so please heed the warning at the top of this essay before you read on.</p>
+            <p>This is where we enter uncharted and unexplored territory, and visit vital cut material that should not should not be outright dismissed for its lack of inclusion in the finished film. The editor of Eyes Wide Shut, Nigel Galt, confirmed in a November 2025 interview that</p>
 
-            <p>Tucked into the Stanley Kubrick Archives are two behind the scenes images that display what the film itself can’t say out loud. Buried in the production photography are two behind-the-scenes shots of Nicole Kidman with the young actress who played Helena on her lap, sitting next to Kubrick as they smile at what appears to be a monitor displaying footage they had shot. In one image, Kubrick holds both Nicole and the young actresses hands, and notes that Helena is an equestrian riding helmet. Not a bike or skateboarding helmet, but an actual riding cap:</p>
+            <blockquote>
+              <p>“There was nothing missing [from the cut that was publicly released] . That cut is Stanley’s cut the day he died. And nothing was over-edited.”</p>
+            </blockquote>
 
-            <div class="figure breakout">
-              <figure>
-                <div class="media placeholder" data-label="OUTDO.JPG (replace with BTS still)" role="img" aria-label="Placeholder for OUTDO.JPG"></div>
-                <figcaption>Replace with <code>OUTDO.JPG</code>.</figcaption>
-              </figure>
-            </div>
+            <p>This confirms that nothing nefarious took place during the final stages of editing, and finally puts to rest the rampant conspiracy theory that 23 minutes were cut from the film after his death, which has loomed over the film since its release. However, this does not mean that Kubrick hadn’t theorized, developed, and even shot more material that would have made these symbolic and thematic connections easier to make. This is where the theory also gets uncomfortable for some, so please heed the warning at the top of this essay before you read on.</p>
 
-            <div class="figure breakout">
-              <figure>
-                <div class="media placeholder" data-label="OUTDO2.JPG (replace with BTS still)" role="img" aria-label="Placeholder for OUTDO2.JPG"></div>
-                <figcaption>Replace with <code>OUTDO2.JPG</code>.</figcaption>
-              </figure>
-            </div>
+            <p>Tucked into the Stanley Kubrick Archives are two behind the scenes images that display what the film itself can’t say out loud. Buried in the production photography are two behind-the-scenes shots of Nicole Kidman with the young actress who played Helena on her lap, sitting next to Kubrick as they smile at what appears to be a monitor displaying footage they had shot. In one image, Kubrick holds both Nicole and the young actresses hands, and in both images Helena is an equestrian riding helmet. Not a bike or skateboarding helmet, but an actual riding cap:</p>
 
-            <p>And yet there is no scene of Helena wearing a riding cap in the film. There’s no equestrian training sequence, and we never see Helena in any exterior shots in the whole film. We see her at home and at the toy store, that’s it. But this outdoor riding scene was shot, costumed, reviewed, and then cut ahead of the film’s final form. Something was planned here that would have made these connections much easier to make, a suggestion too close to the nerve of what Kubrick was actually pointing to. We can’t know how Kubrick meant to use this scene, or the content of it, only that he went out of his way and spent material resources to capture footage that required Helena in a riding helmet.</p>
+            <figure><div class="media placeholder" data-label="OUTDO.JPG"></div><figcaption>Placeholder: OUTDO.JPG</figcaption></figure>
+            <figure><div class="media placeholder" data-label="OUTDO2.JPG"></div><figcaption>Placeholder: OUTDO2.JPG</figcaption></figure>
 
-            <p>What we know for certain is that Kubrick didn’t improvise costly outdoor shoots with children, and he wouldn’t burn time and money dressing Helena for horse riding if he weren’t up to something. If a horse in Kubrick’s visual language represents a knight, sexual animal instinct, and strategic advances, then this is not a cute wardrobe choice, but a troubling suggestive association.</p>
+            <p>And yet there is no scene of Helena wearing a riding helmet in the film, and Nicole isn’t wearing one. There’s no equestrian training sequence, and we never see Helena in any exterior shots in the whole film. We see her at home and at the toy store, that’s it. But this outdoor riding scene was shot, costumed, reviewed, and then cut ahead of the film’s final form.</p>
 
-            <p>These production stills are not random lost moments, but instead serve as subtle details Kubrick put on film and then quietly pulled out of the official text. A message that survives only in photographs, like a redacted sentence where the meaning becomes louder because it’s missing. The horse and Helena connection is not implied, it was staged, shot, then obscured.</p>
+            <p>Something was planned here that would have made these connections much easier to make, a suggestion too close to the nerve of what Kubrick was actually pointing to, that Helena was trapped between childhood and becoming an adult. That riding the horse is a visual confirmation of her symbolic transformation into adulthood, the horse itself serving as Anubis, carrying Helena’s childhood into the realm of adulthood. We can’t know for certain how Kubrick meant to use this scene, or the exact content of it, only that he went out of his way and spent material resources to capture footage that required Helena in a riding helmet.</p>
 
-            <p>This is the missing puzzle piece hiding just outside the film, the unspeakable horror that the narrative isn’t allowed to name, that a child is being developed and pushed into an adult world, a dangerous world where the vulnerable are most at risk. The horse symbol doesn’t gently enter Bill’s mind, it indirectly slides past his awareness, infiltrating his family’s space and Helena’s future.</p>
+            <p>What we do know for certain is that Kubrick didn’t improvise costly outdoor shoots with child actors who, due to protective child labor laws, were very limited by strict rules regarding how long they are allowed to be on set on any given day. Knowing Kubrick’s strategic resourcefulness, I can state with certainty that he wouldn’t burn time and money dressing Helena for horse riding if he weren’t up to something. If a horse in Kubrick’s visual language represents a knight, sexual animal instinct, and strategic advances, then this is not a cute wardrobe choice, but a troubling suggestive association about Helena’s role in the unspoken, unseen shadow of this film.</p>
 
-            <p class="pull">—</p>
+            <p>These production stills are not random lost moments, but instead serve as suggestive, vital connective tissue that Kubrick put on film, then redacted from the official text. A message that survives only in photographs, like a redacted sentence in a declassified FOIA released document, where the meaning becomes louder in absentia. The horse and Helena connection is not implied, it was staged, shot, then obscured before it reached the audience.</p>
 
-            <p>The most overt, direct and visually insane piece of this theory comes from an image Kubrick never shot, but specifically commissioned from graphic artist Fangorn (Chris Baker). Kubrick had initially planned on filming Alice’s sexual dream sequence, which she verbally explains to Bill when he arrives home from Somerton. However, in her verbal descriptions we miss out on key visual movements that Kubrick had theorized and planned which, perhaps, would have been too overt and too obvious to include.</p>
+            <p>This is the missing puzzle piece hiding just outside the film, the unspeakable horror that the narrative isn’t allowed to name, that a child is growing up, being developed and pushed into an adult world, a dangerous world where the vulnerable are most at risk. The horse symbol doesn’t gently enter Bill’s mind, it indirectly slides past his awareness, infiltrating his family’s space and Helena’s future.</p>
+
+            <p>•••</p>
+
+            <p>The most overt, direct and visually insane piece of this theory comes from an image Kubrick never even put on film, but specifically commissioned from graphic artist Fangorn (Chris Baker). Kubrick had initially planned on filming Alice’s sexual dream sequence, which is instead verbalized to Bill when he arrives home from Somerton in the finished film. However, in her verbal summary, we miss out on key visual movements that Kubrick had theorized and planned which, perhaps, would have been too overt and too obvious to include.</p>
 
             <p>All of the storyboards are worth reviewing, but one in particular has always stood out as particularly powerful: an erotic illustration of a naked man having sex with a woman on horseback. You read that correctly, it’s a picture of two people engaged in the primal, carnal energy we’ve witnessed in Bill’s flashbacks, but even more graphic, with Alice being taken from behind on a horse. Two people having animal-style sex (“doggy style”) on an actual animal, drawn for Kubrick’s use, at his specific request:</p>
 
-            <div class="figure breakout">
-              <figure>
-                <div class="media placeholder" data-label="STOBO.jpg (replace with storyboard image)" role="img" aria-label="Placeholder for STOBO.jpg"></div>
-                <figcaption>Replace with <code>STOBO.jpg</code>.</figcaption>
-              </figure>
-            </div>
+            <figure><div class="media placeholder" data-label="STOBO.jpg"></div><figcaption>Placeholder: STOBO.jpg</figcaption></figure>
 
-            <p>In this image, the naval officer sits upright pulling Alice’s hair back with one hand, pressing her down against the horse with the other, as if she were the animal he was controlling. Alice’s head aligns directly with the horses, their eyes matching the same plain, and her hair echoing the shape of the horse’s head.</p>
+            <p>In this image, the naval officer sits upright pulling Alice’s hair back with one hand, pressing her down against the horse with the other, as if she were the animal he was controlling. Alice’s head aligns directly with the horses, their eyes matching the same plain, and her hair echoing the shape of the horse’s head. The mirroring here is over the top, beating you over the head with the horse as Eros, going over the lightly traced, suggestive symbology from the finished film with thick, permanent ink.</p>
 
             <p>Juxtaposed with the suggestion of Helena’s deleted riding setup, the implication of this symbolic combination is visceral and uncomfortable. The horse serves here as both vehicle and vessel, confirming not only the linking of the Naval Officer to the horse symbol, but also the sexual, animal urge that Bill’s blue-tinted fantasy flashbacks suggest.</p>
 
             <p>The storyboard depiction is the clearest, most potent imagery of this theory that exists to my knowledge. In this audacious rendering, we see the grown up implications of what an innocent horse riding scene suggests; an unmasking of the symbolic depth and weight of the horses we have observed. If this is the adult version of what horse-riding means, Helena being costumed in a riding cap all of a sudden becomes a deeply unsettling subject. While Alice lies in bed dreaming of the primal world, Helena is being led to inherit it. Where the dream sequence demonstrates sexual power in its rawest, most obvious form, the riding cap hides in the shadows as the subtlest, most forgettable production detail.</p>
 
-            <p>Kubrick cuts both moments from the film, but he leaves their shadows and associations everywhere. Kubrick had his assistant, Leon Vitali burn all unused footage, and with both of them passed on, so we can only do our best to interpret the visions, patterns, and ideas that were left for us to put together. Despite their absence from the film, these peripheral symbolic decisions are powerfully connected to the pattern we’ve observed, and the pattern began far before Eyes.</p>
+            <p>Kubrick cuts both moments from the film because he had refined his technique well enough to leave this troubling discovery to sit under the liminal perception of his audience, but he leaves the horse and knight shadows and associations everywhere. Kubrick had his assistant, Leon Vitali burn all unused footage, and with both of them passed on, we can only do our best to interpret the visions, patterns, and ideas that were left for us to put together. Despite their absence from the film, these peripheral symbolic decisions are powerfully connected to the techniques, strategies, and patterns we’ve observed.</p>
 
-            <div class="divider">•••</div>
+            <p>•••</p>
 
-            <p>Quickly, while we’re on this subject, which I’d rather not return to, I wanted to cover one last connection to the production photographs where we saw Helena in the riding cap and t-shirt with the flower designs.There is one other character in Eyes who wears flowers, Domino’s roommate Sally. Not only does she wear a long skirt with assorted flowers all over it, she also wears a denim shirt, embroidered with floral designs on the back and collar that point at a western/cowgirl aesthetic, her red hair high in a high, tucked pony tail.</p>
+            <p>One final, uncomfortable connective thread emerges when we look again at the production photographs of Helena. In those images, beyond the riding helmet, she wears a cream-colored shirt featuring rows of flowers as its central design. Like the helmet, in a vacuum this detail might seem trivial, except that there is only one other character in Eyes who is strongly associated with floral imagery: Sally, Domino’s roommate:</p>
 
-            <p>The floral details, the cowgirl shirt and red hair all suggest an association with Helena and horses. The style of shirt Sally wears is evocative of the Wrangler Cowboy Cut denim shirt, whose logo has prominently featured a horse. Could Sally be her riding instructor; the guiding hand, bridging the gap between youth and adulthood? Is the implied Wrangler brand another Kubrickian wordplay joke about Sally being a handler or young women, as if they were livestock?</p>
+            <p>(sally1)</p>
 
-            <p>This also brings to mind the flower store, Nipped In The Bud, where Bill watches a couple—with a woman who looks a lot like Alice—making out in a carnal, primal manner. Bill’s advances with all women, Sally included, are continually nipped in the bud.</p>
+            <p>Sally wears a long skirt covered in flowers and a denim shirt embroidered with floral designs across the back and collar. The shirt has a distinctly western, cowboy-cut look, and her red hair is pulled high into a tight, tucked ponytail. Knowing Kubrick’s fondness for wordplay using American 90’s branding, it’s difficult not to think of Wrangler here: the cowboy-cut denim brand whose identity is inseparable from horses. In ranching terms, a wrangler manages horses, suggesting that Sally’s costuming may give us insight as to her role as a transitional figure within the film’s symbolic language:</p>
 
-            <p>If my assessments of the thematic symbol and cut scene are correct, this is a significant key we need to decode the film. And if that key is to be closely inspected and interpreted, I do not think we should discount the creative details: the riding cap, the Wrangler denim shirt, the high pony tail, or the floral details on their clothing.</p>
+            <p>(sally2)</p>
+
+            <p>What makes this connection unsettling is Sally’s position between Alice and Helena, in age and function, and is advanced upon by Bill—who goes so far as to begin to button her shirt, before she stops him. Sally reads as a young grown up, not a child, but not fully empowered and already shaped by the adult nature of her roommate's profession and illness. If Helena represents a child at the threshold of growing up, Sally emerges as a possible future version of her, or worse, the “wrangler” guiding the young and innocent across that boundary. In Kubrick’s symbolic language, this reframes Sally less as a random supporting character and more as part of the system that processes young women into adult roles.</p>
+
+            <p>This reading may feel like an overreach, connecting a child’s cut-scene costume to another character’s wardrobe through theme rather than plot. But this is Kubrick, and Eyes is built on precisely this kind of indirect association. The riding helmet, the cowboy-cut denim, the floral continuity, the ponytail, the horse-branded American imagery, all orbit the same symbolic world. When placed alongside the deleted riding scene and the horseback dream storyboard, these details stop feeling accidental. They feel like fragments of a larger, deliberately muted pattern, one that traces how innocence is managed, redirected, and quietly absorbed into an adult world.</p>
 
             <h2 id="part-vi"><a class="anchor" href="#part-vi">Part VI: The Conjurer &amp; Kubrick’s Final Mate</a></h2>
 
-            <p>Kubrick shows us horse symbols and hits us with a “ceci n'est pas un cheval,” swirling meaning, myth, fantasy, and chess all into something as simple as a horse toy. The symbol functions as the pulse underneath our society, the sexual, primal animal instinct that refuses to stay hidden, the part of human desire that pushes past manners and laws. Every single time Kubrick brings a horse into frame, something meaningful presses against the screen. A generational inheritance, an unending cyclical spiral forward through time, impossible to fully control. A horse in Kubrick’s work is a disguised force that bypasses the illusions of polite civilization, animates at night, and repositions itself strategically, preparing for battle.</p>
+            <p>Kubrick, king strategist, keys, not answers. With his dark humor he paints “ceci n'est pas un cheval,” under this symbol, swirling meaning, myth, fantasy, and chess, and the nature of life itself all into something as simple as a horse toy. The horse functions as both knight and night, the pulse underneath our society, the sexual, primal animal instinct that refuses to stay hidden, the part of human desire that pushes past manners and laws, and the very act of growing up and becoming an adult. Eros incarnate.</p>
 
-            <p>Eyes Wide Shut makes this symbolic intrusion literal by allowing the ritual world and the domestic world to connect through these symbolic portals. By the end of the film, the concepts and pillars of these worlds touch, overlap, and then blur. The horse doesn’t enter Helena’s life from somewhere outside, it’s already in the house, on the table, waiting for the adults to leave so that it can begin its game.</p>
+            <p>Every single time Kubrick brings a horse into frame, something meaningful presses against the screen. A generational inheritance, an unending cyclical spiral forward through time, impossible to fully control. A horse in Kubrick’s work is a disguised force that bypasses the illusions of polite civilization, animates at night, and repositions itself strategically, preparing for battle.</p>
 
-            <p>This is precisely why the Trojan Horse symbology works so effectively. Alice’s sexual fantasies and orgy dreams and Bill’s jealousy and failed conquests are different gates that the same invasive, animalistic urge walks through, slipping into the family as if it already belonged there. The film begins with firm security in place, and ends with every Harford family member’s life at risk.</p>
+            <p>Eyes Wide Shut makes this symbolic intrusion literal by allowing the ritual world and the domestic world to connect through these symbolic portals. By the end of the film, the concepts and pillars of these worlds touch, overlap, and blur. The horse doesn’t enter Helena’s life from somewhere outside, it’s already in the house, on the table, waiting for the adults to leave so that it can begin its game.</p>
 
-            <p>The most unsettling evidence is that Kubrick already taught us this language decades earlier, in Lolita. He showed us that a knight moves around corners, indirectly, pretending to be harmless. Eyes Wide Shut is what happens when that ancient pattern and movement arrive on a modern square.</p>
+            <p>This is why the Trojan Horse symbology works so effectively. Alice’s sexual fantasies and orgy dreams and Bill’s jealousy and failed conquests are different gates that the same invasive, animalistic urge walks through, slipping into the family as if it already belonged there. The film begins with firm security in place, and ends with every Harford family member’s life at risk.</p>
 
-            <p>…</p>
+            <p>The most unsettling evidence is that Kubrick already taught us this language decades earlier, in Lolita and 2OO1. He showed us that a knight moves around corners, indirectly, pretending to be harmless. That it jumps over other pieces using a hybrid strategy of intelligence and power. Eyes Wide Shut is what happens when that ancient pattern and movement arrive on a modern square.</p>
 
             <p>If all of what I’ve presented wasn’t enough, I ask that you consider one last, almost invisible clue, outside the film entirely. Not in a production photo, not caught from a paparazzi, but from within Kubrick’s own home and marriage. Kubrick’s wife, Christiane, whose paintings adorn the walls of Bill and Alice’s home, the person who lived by Kubrick’s side, worked beside him, and likely understood his symbolic mind better than anyone alive, painted him as a magician performing sleight-of-hand, surrounded by cards, illusions, and impossible objects:</p>
 
-            <div class="figure breakout">
-              <figure>
-                <div class="media placeholder" data-label="[THE CONJURER.JPG] (replace with painting image)" role="img" aria-label="Placeholder for The Conjurer image"></div>
-                <figcaption>Replace with <code>[THE CONJURER.JPG]</code>.</figcaption>
-              </figure>
-            </div>
+            <figure><div class="media placeholder" data-label="[THE CONJURER.JPG]"></div><figcaption>Placeholder: [THE CONJURER.JPG]</figcaption></figure>
 
-            <p>And, if you can believe it! It’s knight symbolism once again! Sitting right there on the table, placed quietly in front of him, is a chess knight. Not a rook, not a pawn, not a king, not a queen—a motherfucking knight. Christiane didn’t depict him as a director behind the camera, but as a conjurer whose tricks depend on indirection, misdirection, hidden moves, and the arrival of something unexpected. Kubrick spent decades subtly showing us that the knight moves around corners, and Christiane Kubrick makes clear exactly whose hand was on the piece. Our knight, the master, Stanley Kubrick.</p>
+            <p>And, if you can believe it, it’s knight symbolism once again. Sitting right there on the table, placed quietly in front of him, is a chess piece. Not a rook, not a pawn, not a king, not a queen—a knight. Christiane didn’t depict Kubrick as a director behind the camera, but as a conjurer whose tricks depend on misdirection, hidden moves, and the arrival of something unexpected. Kubrick spent decades subtly showing us that the knight moves around corners and through locked doors. Tucked in a loving rendering of her lost love, Christiane Kubrick makes clear exactly whose hand was moving the pieces.</p>
 
-            <p>If you’ve made it this far, please consider supporting my efforts by buying me a coffee or a cigarette. This took ages to write, with even more time spent reviewing the film countless times, and I’ve poured my life into this film. If this theory changes how you understand Kubrick, and you value this shift in perspective, it would mean a great deal if you’d consider this. Thanks, Merry Christmas to all, and to all a good (k)night.</p>
+            <p>•••</p>
 
-            <h2 id="on-delusion"><a class="anchor" href="#on-delusion">On Delusion</a></h2>
+            <p>If you’ve made it this far, and this changed how you see Kubrick, you can support the work with a coffee (or a cold one!) here:<br>
+              <a href="https://buymeacoffee.com/daeclan" target="_blank" rel="noopener noreferrer">https://buymeacoffee.com/daeclan</a>
+            </p>
 
-            <p>Kubrick’s work has been drowned for decades in bad-faith theories, moon-landing accusations, assassination fantasies, and mystical overreach, and I understand why serious viewers have developed a reflexive allergy to anything that smells like “I’ve figured it out.” At the same time, Eyes Wide Shut very clearly invites this kind of scrutiny on purpose; it is designed to bait suspicion, to provoke pattern-hunting, and to reward close, cumulative observation.</p>
-
-            <p>The issue isn’t that people look too closely, it’s that they stop too early or leap to conclusions without doing the slow work. What I’m doing here is not declaring hidden truth or insider knowledge, and I’m not claiming authority by initiation, secret membership, or mystical insight. I’m documenting an accumulation of details that, taken individually, could be dismissed, but taken together begin to behave differently. Like a stack of blurry photographs that all resemble the same strange scene, or a sequence of film frames that only reveal motion when seen in succession, the argument here is probabilistic, not declarative.</p>
-
-            <p>The pattern isn’t proven by any single symbol, but by repetition, alignment, and internal consistency across space, time, and films. Some of these connections I noticed before realizing their echoes elsewhere, which only made the coincidences harder to ignore from my own vantage point. You don’t need to agree with my conclusions, and I genuinely invite disagreement, but I ask that you engage with the whole before rejecting the premise. If nothing else, I hope this way of looking gives you a new angle on a film that was never meant to be looked at straight on.</p>
+            <p>This took ages to theorize, write, and develop. If you would like to encourage future explorations or support the work, donations are genuinely appreciated. Merry Christmas to all, and to all a good (k)night.</p>
 
             <section class="footnotes" aria-label="Footnotes">
               <h3 id="footnotes"><a class="anchor" href="#footnotes">Footnotes</a></h3>
               <ol>
-                <li id="fn1">Replace placeholders like <code>OFFICE 1.JPG</code>, <code>APARTMENT 1.JPG</code>, <code>STOBO.jpg</code> with your real stills. Easiest path: put images in the same folder and swap the placeholder <code>div.media</code> with an <code>&lt;img src="..." class="media" /&gt;</code>.</li>
-                <li id="fn2">For the video, replace <code>VIDEO_ID</code> in the iframe URL with the YouTube ID. For self-hosted video, swap the iframe for <code>&lt;video controls playsinline&gt;</code>.</li>
+                <li>Next step: we’ll replace placeholders like <code>OFFICE 1.JPG</code> and <code>{vid1}</code> with real <code>&lt;img&gt;</code> and YouTube <code>&lt;iframe&gt;</code> embeds.</li>
               </ol>
             </section>
 
             <div class="backtop">
               <a href="#top">Back to top</a>
             </div>
+
           </article>
+          <!-- =========================================================
+               YOUR UPDATED TEXT ENDS HERE
+               ========================================================= -->
+
         </div>
       </main>
     </div>
@@ -1221,31 +854,45 @@
       const root = document.documentElement;
       const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-      /* =========================================================
-         Theme
-         ========================================================= */
+      // Theme
       const THEME_KEY = 'daeclan_longform_theme';
       const themeButtons = Array.from(document.querySelectorAll('.themeBtn'));
-
       function setTheme(theme){
         root.setAttribute('data-theme', theme);
         localStorage.setItem(THEME_KEY, theme);
-        themeButtons.forEach(btn => {
-          btn.setAttribute('aria-pressed', btn.dataset.theme === theme ? 'true' : 'false');
-        });
+        themeButtons.forEach(btn => btn.setAttribute('aria-pressed', btn.dataset.theme === theme ? 'true' : 'false'));
       }
+      const savedTheme = localStorage.getItem(THEME_KEY);
+      if(savedTheme) setTheme(savedTheme);
+      themeButtons.forEach(btn => btn.addEventListener('click', () => setTheme(btn.dataset.theme)));
 
-      // init theme
-      const saved = localStorage.getItem(THEME_KEY);
-      if(saved){ setTheme(saved); }
+      // Font picker
+      const FONT_KEY = 'daeclan_longform_font';
+      const fontButtons = Array.from(document.querySelectorAll('.fontBtn'));
+      function setFont(font){
+        root.setAttribute('data-font', font);
+        localStorage.setItem(FONT_KEY, font);
+        fontButtons.forEach(btn => btn.setAttribute('aria-pressed', btn.dataset.font === font ? 'true' : 'false'));
+      }
+      const savedFont = localStorage.getItem(FONT_KEY);
+      if(savedFont) setFont(savedFont); else setFont('ebg');
+      fontButtons.forEach(btn => btn.addEventListener('click', () => setFont(btn.dataset.font)));
 
-      themeButtons.forEach(btn => {
-        btn.addEventListener('click', () => setTheme(btn.dataset.theme));
-      });
+      // Sticky height measurement (fixes mobile header/anchors)
+      const headerEl = document.getElementById('siteHeader');
+      const mobileTocEl = document.getElementById('mobileToc');
+      function updateStickyHeights(){
+        const headerH = headerEl ? Math.round(headerEl.getBoundingClientRect().height) : 56;
+        root.style.setProperty('--header-h', headerH + 'px');
+        const mtVisible = mobileTocEl && getComputedStyle(mobileTocEl).display !== 'none';
+        const mobileH = mtVisible ? Math.round(mobileTocEl.getBoundingClientRect().height) : 0;
+        root.style.setProperty('--mobile-toc-h', mobileH + 'px');
+      }
+      window.addEventListener('resize', updateStickyHeights);
+      window.addEventListener('load', updateStickyHeights);
+      updateStickyHeights();
 
-      /* =========================================================
-         Build TOC from h2 headings
-         ========================================================= */
+      // Build TOC from h2 headings
       const article = document.getElementById('article');
       const tocList = document.getElementById('tocList');
       const tocDrawer = document.getElementById('tocDrawer');
@@ -1266,12 +913,10 @@
           const li = document.createElement('li');
           const link = a.cloneNode(true);
           link.addEventListener('click', (e) => {
-            // drawer close on mobile
             if(drawer.classList.contains('is-open')) closeDrawer();
-            // smooth scroll (unless reduced motion)
             if(!prefersReduced){
               e.preventDefault();
-              document.getElementById(link.dataset.target).scrollIntoView({behavior: 'smooth', block: 'start'});
+              document.getElementById(link.dataset.target).scrollIntoView({behavior:'smooth', block:'start'});
               history.replaceState(null, '', link.getAttribute('href'));
             }
           });
@@ -1279,52 +924,27 @@
           targetUl.appendChild(li);
         });
       }
-
       renderTOC(tocList);
       renderTOC(tocDrawer);
 
-      /* =========================================================
-         Scroll Spy
-         ========================================================= */
+      // Scroll spy
       const allTOCLinks = () => Array.from(document.querySelectorAll('.toc__list a'));
       let activeId = headings[0] ? headings[0].id : null;
-
       function setActive(id){
         if(!id) return;
         activeId = id;
-
-        allTOCLinks().forEach(a => {
-          a.classList.toggle('is-active', a.dataset.target === id);
-        });
-
+        allTOCLinks().forEach(a => a.classList.toggle('is-active', a.dataset.target === id));
         const currentHeading = document.getElementById(id);
-        if(currentHeading){
-          mobileCurrent.textContent = currentHeading.textContent.trim();
-        }
+        if(currentHeading) mobileCurrent.textContent = currentHeading.textContent.trim();
       }
-
-      // IntersectionObserver for section highlighting
       const observer = new IntersectionObserver((entries) => {
-        // prioritize the entry that is most visible and intersecting
-        const visible = entries
-          .filter(e => e.isIntersecting)
-          .sort((a,b) => (b.intersectionRatio - a.intersectionRatio));
-
-        if(visible.length){
-          setActive(visible[0].target.id);
-        }
-      }, {
-        root: null,
-        rootMargin: '-15% 0px -70% 0px',
-        threshold: [0.06, 0.12, 0.2, 0.35, 0.5]
-      });
-
+        const visible = entries.filter(e => e.isIntersecting).sort((a,b) => (b.intersectionRatio - a.intersectionRatio));
+        if(visible.length) setActive(visible[0].target.id);
+      }, { root:null, rootMargin:'-15% 0px -70% 0px', threshold:[0.06,0.12,0.2,0.35,0.5] });
       headings.forEach(h => observer.observe(h));
       setActive(activeId);
 
-      /* =========================================================
-         Reading Progress
-         ========================================================= */
+      // Progress
       const progressBar = document.getElementById('progressBar');
       function updateProgress(){
         const doc = document.documentElement;
@@ -1337,9 +957,7 @@
       window.addEventListener('resize', updateProgress);
       updateProgress();
 
-      /* =========================================================
-         Mobile Drawer
-         ========================================================= */
+      // Drawer
       const drawer = document.getElementById('drawer');
       const openDrawerBtn = document.getElementById('openDrawer');
       const closeDrawerBtn = document.getElementById('closeDrawer');
@@ -1347,17 +965,16 @@
 
       function openDrawer(){
         drawer.classList.add('is-open');
-        openDrawerBtn.setAttribute('aria-expanded', 'true');
+        openDrawerBtn.setAttribute('aria-expanded','true');
         closeDrawerBtn.focus();
         document.body.style.overflow = 'hidden';
       }
       function closeDrawer(){
         drawer.classList.remove('is-open');
-        openDrawerBtn.setAttribute('aria-expanded', 'false');
+        openDrawerBtn.setAttribute('aria-expanded','false');
         openDrawerBtn.focus();
         document.body.style.overflow = '';
       }
-
       openDrawerBtn.addEventListener('click', openDrawer);
       closeDrawerBtn.addEventListener('click', closeDrawer);
       drawerBackdrop.addEventListener('click', closeDrawer);
@@ -1365,35 +982,14 @@
         if(e.key === 'Escape' && drawer.classList.contains('is-open')) closeDrawer();
       });
 
-      /* =========================================================
-         Word count + read time
-         ========================================================= */
-      function countWords(text){
-        return (text.trim().match(/\S+/g) || []).length;
-      }
+      // Word count + read time
+      function countWords(text){ return (text.trim().match(/\S+/g) || []).length; }
       const words = countWords(article.textContent);
-      const wpm = 220; // reasonable longform pace
-      const mins = Math.max(1, Math.round(words / wpm));
+      const mins = Math.max(1, Math.round(words / 220));
+      ['metaWordCount','metaWordCount2'].forEach(id => { const el=document.getElementById(id); if(el) el.textContent = words.toLocaleString(); });
+      ['metaReadTime','metaReadTime2','metaReadTime3'].forEach(id => { const el=document.getElementById(id); if(el) el.textContent = String(mins); });
 
-      const wcEls = [
-        document.getElementById('metaWordCount'),
-        document.getElementById('metaWordCount2')
-      ];
-      const rtEls = [
-        document.getElementById('metaReadTime'),
-        document.getElementById('metaReadTime2'),
-        document.getElementById('metaReadTime3')
-      ];
-
-      wcEls.forEach(el => el && (el.textContent = words.toLocaleString()));
-      rtEls.forEach(el => el && (el.textContent = mins.toString()));
-
-      // Date: editable (kept as literal string in HTML), but you can also auto-set here if you want.
-      // document.getElementById('metaDate').textContent = new Date().toLocaleDateString(undefined, {year:'numeric', month:'long', day:'numeric'});
-
-      /* =========================================================
-         Smooth scroll for anchor links (respect reduced motion)
-         ========================================================= */
+      // Smooth anchor scroll (respect reduced motion)
       if(!prefersReduced){
         document.querySelectorAll('a[href^="#"]').forEach(a => {
           a.addEventListener('click', (e) => {
@@ -1401,17 +997,13 @@
             if(!id) return;
             const el = document.getElementById(id);
             if(!el) return;
-
-            // let TOC handler manage its own
             if(a.closest('.toc__list')) return;
-
             e.preventDefault();
-            el.scrollIntoView({behavior: 'smooth', block: 'start'});
-            history.replaceState(null, '', '#' + id);
+            el.scrollIntoView({behavior:'smooth', block:'start'});
+            history.replaceState(null,'','#'+id);
           });
         });
       }
-
     })();
   </script>
 </body>
